@@ -4,19 +4,21 @@ function post_add($obj) {
 	global $site;
 	
 	try {
-		$sql = "INSERT INTO content (
-					community, player, date_added, name, name_url, body
+		$sql = "INSERT INTO post (
+					author, title, title_url, content, date_created
 				) VALUES (
-					?, ?, NOW(), ?, ?, ?
+					?, ?, ?, ?, NOW()
 				)";
 		$q = $site->db->prepare($sql);
-		$q->bindValue(1, $obj->community, PDO::PARAM_INT);
-		$q->bindValue(2, $obj->player, PDO::PARAM_INT);
-		$q->bindValue(3, $obj->name, PDO::PARAM_STR);
-		$q->bindValue(4, $obj->name_url, PDO::PARAM_STR);
-		$q->bindValue(5, $obj->body, PDO::PARAM_STR);
+		$q->bindValue(1, $obj->author, PDO::PARAM_INT);
+		$q->bindValue(2, $obj->title, PDO::PARAM_STR);
+		$q->bindValue(3, $obj->title_url, PDO::PARAM_STR);
+		$q->bindValue(4, $obj->content, PDO::PARAM_STR);
 		$q->execute();
-		return return_obj_success();
+		
+		$r = return_obj_success();
+		$r->id = $site->db->lastInsertId();
+		return $r;
 	} catch (PDOException $e) {
 		return return_obj_fail($e->getMessage());
 	}
