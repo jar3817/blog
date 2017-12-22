@@ -1,3 +1,4 @@
 <?php
-// do stuff
+include_once("_inc/main.php");
+
 ?>
