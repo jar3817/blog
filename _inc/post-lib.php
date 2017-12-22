@@ -24,6 +24,43 @@ function post_add($obj) {
 	}
 }
 
+function post_edit($obj) {
+	global $site;
+	
+	try {
+		$sql = "UPDATE post SET 
+					author = ?, 
+					title = ?, 
+					title_url = ?, 
+					content = ?, 
+					date_created = ?,
+					published = ?,
+					date_published = ?,
+					edited = ?,
+					editor = ?,
+					date_edited = ?
+				WHERE id = ?
+				LIMIT 1";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $obj->author, PDO::PARAM_INT);
+		$q->bindValue(2, $obj->title, PDO::PARAM_STR);
+		$q->bindValue(3, $obj->title_url, PDO::PARAM_STR);
+		$q->bindValue(4, $obj->content, PDO::PARAM_STR);
+		$q->bindValue(5, $obj->date_created, PDO::PARAM_STR);
+		$q->bindValue(6, $obj->published, PDO::PARAM_INT);
+		$q->bindValue(7, $obj->date_published, PDO::PARAM_STR);
+		$q->bindValue(8, $obj->edited, PDO::PARAM_INT);
+		$q->bindValue(9, $obj->editor, PDO::PARAM_INT);
+		$q->bindValue(10, $obj->date_edited, PDO::PARAM_STR);
+		$q->bindValue(11, $obj->id, PDO::PARAM_INT);
+		$q->execute();
+		
+		return return_obj_success();
+	} catch (PDOException $e) {
+		return return_obj_fail($e->getMessage());
+	}
+}
+
 function post_get($id) {
 	global $site;
 	
