@@ -9,6 +9,7 @@ include_once("_inc/settings.php");
 include_once("_inc/database-lib.php");
 include_once("_inc/common.php");
 include_once("_inc/post-lib.php");
+include_once("_inc/comment-lib.php");
 
 // connect to the database
 $db = db_connect();
