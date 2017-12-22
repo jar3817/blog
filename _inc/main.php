@@ -7,6 +7,8 @@ ini_set('display_errors', 1);
 // include all libraries
 include_once("_inc/settings.php");
 include_once("_inc/database-lib.php");
+include_once("_inc/common.php");
+include_once("_inc/post-lib.php");
 
 // connect to the database
 $db = db_connect();
