@@ -1,3 +1,9 @@
+@import url("/assets/css/bootstrap.min.css");
+@import url("/assets/css/jquery-ui-1.12.1.min.css");
+@import url("/assets/css/summernote.css");
+@import url("/assets/css/toastr.min.css");
+@import url("/assets/css/magicsuggest-min.2.1.4.css");
+
 body {
 	background-color: rgb(0,0,0);
 }

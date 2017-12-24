@@ -27,6 +27,52 @@ function generate_key($len=6) {
 	return substr($key, 0, $len);
 }
 
+function navigation(){
+	global $site;
+	?>
+	<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/"><?=$site->settings->site_name?></a>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/communities">Communities</a></li>
+					<li><a href="/members">Members</a></li>
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+<?php 
+	if (user_is_logged_in()) { 
+		//$c = message_unread_count($site->user->id);
+		$c = 0;
+		$unread = ($c > 0) ? " <span class=\"badge badge-error\">$c</span>" : "";
+?>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?=$site->user->name . $unread?> <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="<?=$site->settings->uri_msg?>">Inbox<?=$unread?></a></li>
+							<li><a href="<?=$site->settings->uri_profile?>">Profile</a></li>
+							<li><a href="<?=$site->settings->uri_settings?>">Settings</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="<?=$site->settings->uri_logout?>">Signout</a></li>
+						</ul>
+					</li>
+<?php } else { ?>
+					<li class=""><a href="<?=$site->settings->uri_login?>">Sign in</a></li>
+<?php } ?>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<?php
+}
+
 function return_obj_fail($str) {
 	$o = new StdClass();
 	$o->result = "failure";
