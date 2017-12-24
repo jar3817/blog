@@ -30,7 +30,7 @@ function generate_key($len=6) {
 function navigation(){
 	global $site;
 	?>
-	<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -42,8 +42,7 @@ function navigation(){
 			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="/communities">Communities</a></li>
-					<li><a href="/members">Members</a></li>
+					<li><a href="/hist">History</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
@@ -54,9 +53,8 @@ function navigation(){
 		$unread = ($c > 0) ? " <span class=\"badge badge-error\">$c</span>" : "";
 ?>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?=$site->user->name . $unread?> <span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span><?=$unread?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="<?=$site->settings->uri_msg?>">Inbox<?=$unread?></a></li>
 							<li><a href="<?=$site->settings->uri_profile?>">Profile</a></li>
 							<li><a href="<?=$site->settings->uri_settings?>">Settings</a></li>
 							<li role="separator" class="divider"></li>
@@ -64,7 +62,7 @@ function navigation(){
 						</ul>
 					</li>
 <?php } else { ?>
-					<li class=""><a href="<?=$site->settings->uri_login?>">Sign in</a></li>
+					<li class=""><a href="<?=$site->settings->uri_login?>"><span class="glyphicon glyphicon-user"></span></a></li>
 <?php } ?>
 				</ul>
 			</div>

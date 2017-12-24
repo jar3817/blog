@@ -19,4 +19,9 @@ $settings->db_pass 		= "";
 $settings->db_schema 	= "blog";
 $settings->db_timezone	= "+00:00";	// store everything in GMT
 
+// URIs
+$settings->uri_login	= "/signin";
+$settings->uri_logout	= "/signout";
+$settings->uri_profile	= "/my-account";
+$settings->uri_settings	= "/my-settings";
 ?>
