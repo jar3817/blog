@@ -29,4 +29,49 @@ function return_obj_success() {
 	return $o;
 }
 
+// recursively add slashes to all text fields
+function slash($obj){
+	$obj2 = new stdClass();
+	foreach($obj as $key => $value) {
+		if (is_object($value)){
+			$obj2->key = slash($value);
+		}
+		
+		if (is_string($value)){
+			$obj2->$key = addslashes($value);
+		} else {
+			$obj2->$key = $value;
+		}
+	}
+	return $obj2;
+}
+
+// recursively remove slashes from all text fields of the object
+function unslash($obj){
+	$obj2 = new stdClass();
+	foreach($obj as $key => $value) {
+		if (is_object($value)){
+			$obj2->key = unslash($value);
+		}
+		
+		if (is_string($value)) {
+			$obj2->$key = stripslashes($value);
+		} else {
+			$obj2->$key = $value;
+		}
+	}
+	return $obj2;
+}
+
+// sanitize strings for using in URLs (How's your Hotdog? => hows-your-hotdog
+function url_string($str){
+	$remove = array(
+		"/", "\\", "`", "~", "!", "@", "#", "\$", "%", "^", 
+		"&", "*", "(", ")", "+", "=", "?", ",", ".", "<", ">", "'", "\""
+	);
+	$out = str_replace($remove, "", strtolower($str));
+	$replace = array(" ", "_");
+	return str_replace($replace, "-", $out);
+}
+
 ?>
