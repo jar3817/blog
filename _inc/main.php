@@ -1,9 +1,5 @@
 <?php
 
-// just while developing
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // include all libraries
 include_once("_inc/settings.php");
 include_once("_inc/database-lib.php");
