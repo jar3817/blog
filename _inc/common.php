@@ -1,5 +1,18 @@
 <?php
 
+// UTC time in the database, converts to user's timezone
+function format_date($date, $timetoo = 0, $format = "M j, Y") {
+	global $site;
+	$changetime = new DateTime($date, new DateTimeZone('UTC'));
+	$changetime->setTimezone(new DateTimeZone($site->user->zone));
+	$time24 = "H:i";
+	$time12 = "g:i a";
+	$time = ($site->user->timeformat) ? $time12 : $time24;
+	$time = ($timetoo) ? " - " . $time : "";
+	return $changetime->format($format . $time);
+}
+
+// make a "random" string of $len length
 function generate_key($len=6) {
 	$k = uniqid();
 	if ($len > strlen($k)) {
