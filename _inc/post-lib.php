@@ -83,9 +83,9 @@ function post_list($offset=0, $length=10) {
 	global $site;
 	
 	try {
-		$sql = "SELECT id, user_id, category, post_date, title, link_title, published, hidden
+		$sql = "SELECT *
 				FROM post
-				ORDER BY post_date DESC
+				ORDER BY date_created DESC
 				LIMIT ? 
 				OFFSET ?";
 		$q = $site->db->prepare($sql);
@@ -104,4 +104,30 @@ function post_list($offset=0, $length=10) {
 	}
 }
 
+function post_slug($o) {
+	global $site;
+	
+	if (!$o->published) {
+		return;
+	}
+?>
+	<div class="post">
+		<h1><a href="/<?=$o->title_url?>"><?=$o->title?></a></h1>
+		<h2><?=format_date($o->date_created)?> // Joe</h2>
+		<p>
+			<?=$o->content?>
+		</p>
+	</div>
+<?php
+}
+
+function post_index() {
+	global $site;
+	
+	$posts = post_list();
+	
+	foreach ($posts->result as $p) {
+		post_slug($p);
+	}
+}
 ?>

@@ -4,10 +4,10 @@
 function format_date($date, $timetoo = 0, $format = "M j, Y") {
 	global $site;
 	$changetime = new DateTime($date, new DateTimeZone('UTC'));
-	$changetime->setTimezone(new DateTimeZone($site->user->zone));
+	$changetime->setTimezone(new DateTimeZone($site->settings->default_timezone));
 	$time24 = "H:i";
 	$time12 = "g:i a";
-	$time = ($site->user->timeformat) ? $time12 : $time24;
+	$time = (1) ? $time12 : $time24;
 	$time = ($timetoo) ? " - " . $time : "";
 	return $changetime->format($format . $time);
 }
