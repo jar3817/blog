@@ -49,3 +49,7 @@ body {
 .code-font {
 	font-family: "Courier New";
 }
+
+.execution-timer {
+	text-align: center;
+}

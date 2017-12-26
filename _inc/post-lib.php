@@ -123,11 +123,34 @@ function post_slug($o) {
 
 function post_index() {
 	global $site;
-	
 	$posts = post_list();
+	
+	include_once("_inc/head.php");
+	navigation();
+	
+	echo "<div class=\"container\">\n";
 	
 	foreach ($posts->result as $p) {
 		post_slug($p);
 	}
+	
+	echo "</div>\n";
+	include("_inc/foot.php");
+}
+
+function post_single($name) {
+	die("hi");
+}
+
+function post_view() {
+	global $site;
+	
+	if (isset($get->postname) && strlen($get->postname) > 0) {
+		post_single($get->postname);
+	} else {
+		post_index();
+	}
+	
+	die();
 }
 ?>

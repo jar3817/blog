@@ -131,4 +131,12 @@ function url_string($str){
 	return str_replace($replace, "-", $out);
 }
 
+function timer_start() {
+	$GLOBALS['exetime'] = microtime(true);
+}
+
+function timer_end() {
+	$end = microtime(true) - $GLOBALS['exetime'];
+	echo "<div class=\"execution-timer code-font small\">execution time: " . $end . " seconds</div>"; 
+}
 ?>

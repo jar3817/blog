@@ -8,6 +8,8 @@ include_once("_inc/user-lib.php");
 include_once("_inc/post-lib.php");
 include_once("_inc/comment-lib.php");
 
+timer_start();
+
 // connect to the database
 $db = db_connect();
 

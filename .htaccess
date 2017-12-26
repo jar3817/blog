@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteRule ^signin$	index.php?op=auth
+RewriteRule ^signout$	index.php?op=auth
+
+
+# catch everything else (webpages) that don't exist in the filesystem
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?op=view&postname=$1 [QSA]
