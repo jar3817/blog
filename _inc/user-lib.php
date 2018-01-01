@@ -108,19 +108,6 @@ function user_logout() {
 	session_destroy();
 }
 
-function user_check_token() {
-	global $site;
-	
-	$site->settings->login_fb_token_check .= $_SESSION['access_token'];
-	$out = file_get_contents($site->settings->login_fb_token_check);
-	$o = json_decode($out);
-	
-	// logged in, we have a user id
-	if (isset($o->data->user_id) && strlen($o->data->user_id) > 0) {
-		$_SESSION['user_id'] = $o->data->user_id;
-	}
-}
-
 function user_setup() {
 	$u = new stdClass();
 	
