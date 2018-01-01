@@ -1,7 +1,7 @@
 <?php
 
 // UTC time in the database, converts to user's timezone
-function format_date($date, $timetoo = 0, $format = "M j, Y") {
+function format_date($date, $timetoo = 0, $format = "F j, Y") {
 	global $site;
 	$changetime = new DateTime($date, new DateTimeZone('UTC'));
 	$changetime->setTimezone(new DateTimeZone($site->settings->default_timezone));
@@ -69,6 +69,18 @@ function navigation(){
 		</div>
 	</nav>
 	<?php
+}
+
+function redirect($url){
+	header("Location: $url");
+	die();
+}
+
+function redirect_return() {
+	global $post;
+	$url = base64_decode($post->return);
+	header("Location: $url");
+	die();
 }
 
 function return_obj_fail($str) {

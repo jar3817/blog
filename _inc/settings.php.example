@@ -1,0 +1,53 @@
+<?php
+error_reporting(E_ALL & ~E_STRICT);
+ini_set('display_errors', 1);
+
+date_default_timezone_set('UTC');
+
+$settings = new stdClass();
+
+// site settings
+$settings->site_name	= "My awesome website";
+$settings->site_path	= "/var/www/html";
+$settings->site_url		= "https://example.net";
+$settings->site_cookie	= "COOKIE NAME HERE";
+
+
+// database settings
+$settings->db_host 		= "localhost";
+$settings->db_user 		= "root";
+$settings->db_pass 		= "";
+$settings->db_schema 	= "blog";
+$settings->db_timezone	= "+00:00";	// store everything in GMT
+
+// timezones
+$settings->default_timezone = "America/New_York";
+
+// URIs
+$settings->uri_login	= "/signin";
+$settings->uri_logout	= "/signout";
+$settings->uri_profile	= "/my-account";
+$settings->uri_settings	= "/my-settings";
+
+// facebook login
+$settings->login_fb_client_id 		= "YOUR APP ID HERE";
+$settings->login_fb_client_secret	= "YOUR APP SECRET HERE";
+$settings->login_fb_app_token		= "YOUR APP TOKEN HERE"; // get from https://developers.facebook.com/tools/access_token/
+$settings->login_fb_redirect_uri 	= $settings->site_url . $settings->uri_login;
+$settings->login_fb_form 			= sprintf(
+										"https://www.facebook.com/v2.11/dialog/oauth?client_id=%d&redirect_uri=%s&state=%s",
+										$settings->login_fb_client_id,
+										$settings->login_fb_redirect_uri,
+										generate_key()
+									);
+$settings->login_fb_access_token 	= sprintf(
+										"https://graph.facebook.com/v2.11/oauth/access_token?client_id=%d&redirect_uri=%s&client_secret=%s&code=",
+										$settings->login_fb_client_id,
+										$settings->login_fb_redirect_uri,
+										$settings->login_fb_client_secret
+									);
+$settings->login_fb_token_check		= sprintf(
+										"https://graph.facebook.com/debug_token?access_token=%s&input_token=",
+										$settings->login_fb_app_token
+									);
+?>
