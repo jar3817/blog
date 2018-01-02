@@ -10,8 +10,9 @@ $settings = new stdClass();
 $settings->site_name	= "My awesome website";
 $settings->site_path	= "/var/www/html";
 $settings->site_url		= "https://example.net";
-$settings->site_cookie	= "COOKIE NAME HERE";
 
+// how long you stay logged in (seconds)
+$settings->login_ttl	= 3600 * 24 * 5;
 
 // database settings
 $settings->db_host 		= "localhost";
@@ -28,6 +29,12 @@ $settings->uri_login	= "/signin";
 $settings->uri_logout	= "/signout";
 $settings->uri_profile	= "/my-account";
 $settings->uri_settings	= "/my-settings";
+
+// manager URIs
+$settings->uri_manager			= "/manage";
+$settings->uri_man_new_post		= sprintf("%s/%s", $settings->uri_manager, "new-post");
+$settings->uri_man_posts		= sprintf("%s/%s", $settings->uri_manager, "posts");
+$settings->uri_man_edit_post	= sprintf("%s/%s", $settings->uri_manager, "edit-post");
 
 // facebook login
 $settings->login_fb_client_id 		= "YOUR APP ID HERE";

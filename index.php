@@ -1,11 +1,8 @@
 <?php
 include_once("_inc/main.php");
 
-//die(var_dump($post));
+switch ((isset($get->op)) ? $get->op : "") {
 
-$op = (isset($get->op)) ? $get->op : "";
-switch ($op) {
-	// signin and signout
 	case "auth":
 	user_auth_form();
 	break;
@@ -19,7 +16,6 @@ switch ($op) {
 	user_auth_callback2();
 	break;
 	
-	// process logout
 	case "auth_out":
 	user_logout();
 	redirect("/");

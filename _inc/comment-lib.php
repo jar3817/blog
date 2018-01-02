@@ -85,13 +85,16 @@ function comment_get($id) {
 	}
 }
 
-function comment_list($post, $offset=0, $length=50) {
+function comment_list($post, $published=1, $offset=0, $length=50) {
 	global $site;
 	
+	$pub = ($published) ? " AND published = 1" : "";
+	
 	try {
-		$sql = "SELECT *
-				FROM comment
-				WHERE post = ?
+		$sql = "SELECT c.*, u.name AS author
+				FROM comment c
+				LEFT OUTER JOIN user u ON u.id = c.user
+				WHERE post = ? $pub
 				ORDER BY date_created DESC
 				LIMIT ? 
 				OFFSET ?";
@@ -112,4 +115,43 @@ function comment_list($post, $offset=0, $length=50) {
 	}
 }
 
+function comment_modal($post) {
+	global $site;
+	
+	if (!user_is_logged_in()) {
+		return;
+	}
+?>
+<div id="newcomment" class="modal fade">
+	<form role="form" action="workorders.php" method="post">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Leave a comment</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<textarea id="body" name="body" class="form-control" placeholder="Comments here" required></textarea>
+					</div>
+					
+					<script type="text/javascript">
+						$(document).ready(function($) {
+							$('#body').summernote({ 
+								height: 200
+							});
+						});
+					</script>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" name="">Submit</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="post" value="<?=$post?>"/>
+	</form>
+</div>
+<?php
+}
 ?>

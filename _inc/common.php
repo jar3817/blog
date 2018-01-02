@@ -41,10 +41,11 @@ function navigation(){
 				<a class="navbar-brand" href="/"><?=$site->settings->site_name?></a>
 			</div>
 			<div class="collapse navbar-collapse">
+				<!--
 				<ul class="nav navbar-nav">
 					<li><a href="/hist">History</a></li>
 				</ul>
-
+				-->
 				<ul class="nav navbar-nav navbar-right">
 <?php 
 	if (user_is_logged_in()) { 
@@ -53,16 +54,17 @@ function navigation(){
 		$unread = ($c > 0) ? " <span class=\"badge badge-error\">$c</span>" : "";
 ?>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span><?=$unread?> <span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img class="img-circle profile-thumbnail" src="<?=$site->user->picture_url?>"> <?=given_name($site->user->name)?> <?=$unread?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="<?=$site->settings->uri_profile?>">Profile</a></li>
+							<li><a href="#">My Posts</a></li>
+							<li><a href="#">My Comments</a></li>
 							<li><a href="<?=$site->settings->uri_settings?>">Settings</a></li>
 							<li role="separator" class="divider"></li>
 							<li><a href="<?=$site->settings->uri_logout?>">Signout</a></li>
 						</ul>
 					</li>
 <?php } else { ?>
-					<li class=""><a href="<?=$site->settings->uri_login?>"><span class="glyphicon glyphicon-user"></span></a></li>
+					<li class=""><a href="<?=$site->settings->uri_login?>">sign in</a></li>
 <?php } ?>
 				</ul>
 			</div>
@@ -151,4 +153,71 @@ function timer_end() {
 	$end = microtime(true) - $GLOBALS['exetime'];
 	echo "<div class=\"execution-timer code-font small\">execution time: " . $end . " seconds</div>"; 
 }
+
+function given_name($fullname) {
+	$n = explode(" ", trim($fullname));
+	return $n[0];
+}
+
+function time_ago($date) {
+	global $site;
+	
+	$now = time();
+	$then = format_date($date, 0, "U");
+	
+	// future-proofing
+	if ($now < $then) return "soon";
+	
+	$delta = $now - $then;
+	if ($delta < 60) return "just now";
+	else if ($delta < 3600) {
+		$t = floor($delta / 60);
+		return sprintf("%d minute%s ago", $t, ($t == 1) ? "" : "s");
+	} else if ($delta < (3600 * 24)) {
+		$t = floor($delta / 3600);
+		return sprintf("%d hour%s ago", $t, ($t == 1) ? "" : "s");
+	} else if ($delta < (86400 * 7)) {
+		$t = floor($delta / 86400);
+		return sprintf("%d day%s ago", $t, ($t == 1) ? "" : "s");
+	} else if ($delta < (86400 * 30)) {
+		$t = floor($delta / (86400 * 7));
+		return sprintf("%d week%s ago", $t, ($t == 1) ? "" : "s");
+	} else if ($delta < (86400 * 7 * 52)) {
+		$t = floor($delta / (86400 * 30));
+		return sprintf("%d month%s ago", $t, ($t == 1) ? "" : "s");
+	} else {
+		$t = floor($delta / (86400 * 7 * 52));
+		return sprintf("%d year%s ago", $t, ($t == 1) ? "" : "s");
+	}
+}
+
+function time_ago2($date, $full = false) {
+	$now = new DateTime;
+    $ago = new DateTime($date);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+}
+
 ?>

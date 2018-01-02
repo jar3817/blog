@@ -168,16 +168,30 @@ function post_single($name) {
 	
 	include_once("_inc/head.php");
 	navigation();
-	
+	$comments = comment_list($p->id);
+	$comments = (isset($comments->result)) ? $comments->result : null;
 	echo "<div class=\"container\">\n";
 ?>
 	<div class="post">
 		<h1><?=$p->title?></h1>
-		<h2><?=format_date($p->date_created)?> // Joe</h2>
-		<p>
+		<h2><?=format_date($p->date_created)?></h2>
+		<p>	
 			<?=$p->content?>
 		</p>
-		<p>Comments go here</p>
+		
+		<div id="comments">
+<?php if (user_is_logged_in()) { ?>
+			<button class="btn btn-default" data-toggle="modal" data-target="#newcomment">Add a comment</button>
+			<?=comment_modal($p->id)?>
+<?php } ?>
+<?php foreach ((array)$comments as $c) { ?>
+			<hr>
+			<div class="comment">
+				<div class="comment-header"><?=($c->user) ? given_name($c->author) : $c->name?> // <span title="<?=format_date($c->date_created, 1)?>"><?=time_ago($c->date_created)?></span></div>
+				<div class="comment-body"><?=$c->body?></div>
+			</div>
+<?php } ?>
+		</div>
 	</div>
 <?
 	echo "</div>\n";

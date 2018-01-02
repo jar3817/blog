@@ -23,44 +23,39 @@ function user_auth_form() {
 	</script>
 
 	<script type="text/javascript">
-		var CLIENT_ID = '895430332496-av93kv5330lbfes7e39kbin7ld5t7bqs.apps.googleusercontent.com';
-		//var CLIENT_ID = '909475805036-c6a2caro7uu9t0c2v6gmvvpdnfp98ueh.apps.googleusercontent.com';
-		  // FirebaseUI config.
-		  var uiConfig = {
+		var uiConfig = {
 			signInSuccessUrl: '/process-signin',
 			signInFlow: 'redirect',
 			signInOptions: [
-			  // Leave the lines as is for the providers you want to offer your users.
-			  {
-				provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-				authMethod: 'https://accounts.google.com',
-				clientId: CLIENT_ID
-			  },
-			  {
-				provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-				scopes: ['public_profile','email'],
-				customParameters: {
-					// Forces password re-entry.
-					auth_type: 'reauthenticate'
-				  }
-			  },
-			  {
-				provier: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-				requireDisplayName: true
-			  },
-			  firebase.auth.PhoneAuthProvider.PROVIDER_ID
+				{
+					provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+					authMethod: 'https://accounts.google.com',
+					clientId: '895430332496-av93kv5330lbfes7e39kbin7ld5t7bqs.apps.googleusercontent.com'
+				},
+				{
+					provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+					scopes: ['public_profile','email'],
+					customParameters: {	
+						auth_type: 'reauthenticate' // Forces password re-entry.
+					}
+				},
+				{
+					provier: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+					requireDisplayName: true
+				},
+				firebase.auth.PhoneAuthProvider.PROVIDER_ID
 			],
-			// Terms of service url.
-			tosUrl: '/terms'
-		  };
 
-		  // Initialize the FirebaseUI Widget using Firebase.
-		  var ui = new firebaseui.auth.AuthUI(firebase.auth());
-		  // The start method will wait until the DOM is loaded.
-		  ui.start('#firebaseui-auth-container', uiConfig);
+			tosUrl: '/terms'
+		};
+
+		var ui = new firebaseui.auth.AuthUI(firebase.auth()); 
+		ui.start('#firebaseui-auth-container', uiConfig); // will wait for DOM to load
 	</script>
+	
 	<p>Login using one of these:</p>
 	<div id="firebaseui-auth-container"></div>
+	<div id="login-pending"></div>
 </div>
 <?php
 
@@ -68,7 +63,8 @@ include("_inc/foot.php");
 }
 
 function user_is_logged_in() {
-	return false;
+	global $site;
+	return isset($site->user->id) && is_numeric($site->user->id) && $site->user->id > 0;
 }
 
 function user_login($o) {
@@ -94,7 +90,7 @@ function user_login($o) {
 	
 	$_SESSION['user']		= $o->id;
 	$_SESSION['user_id']	= $o->user_id;
-	$_SESSION['expires']	= $o->expire_time;
+	$_SESSION['expires']	= time() + $site->settings->login_ttl;
 	
 	return return_obj_success();
 }
@@ -130,7 +126,11 @@ function user_get($id) {
 	global $site;
 	
 	try {
-		$sql = "SELECT * FROM user WHERE id = ? LIMIT 1";
+		$sql = "SELECT u.*, m.id AS manager 
+				FROM user u
+				LEFT OUTER JOIN manager m ON m.user = u.id
+				WHERE u.id = ? 
+				LIMIT 1";
 		$q = $site->db->prepare($sql);
 		$q->bindValue(1, $id, PDO::PARAM_INT);
 		$q->execute();
@@ -240,6 +240,7 @@ function user_create($obj) {
 function user_auth_callback() {
 	global $site;
 	include_once("_inc/head.php");
+	navigation();
 ?>
 <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
 <script>
@@ -343,6 +344,6 @@ function user_auth_callback2() {
 		$user->expire_time = $u->exp;
 	}
 	
-	$login = user_login($user);
+	user_login($user);
 }
 ?>

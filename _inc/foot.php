@@ -1,3 +1,3 @@
-<?php timer_end(); ?>
+<!-- <?php timer_end(); ?> -->
 	</body>
 </html>
