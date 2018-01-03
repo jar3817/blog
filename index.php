@@ -25,6 +25,10 @@ switch ((isset($get->op)) ? $get->op : "") {
 	post_view();
 	break;	
 	
+	case "post-comment":
+	post_add_comment();
+	break;
+	
 	default:
 	post_view();
 }

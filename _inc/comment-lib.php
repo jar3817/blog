@@ -6,20 +6,16 @@ function comment_add($obj) {
 	try {
 		$sql = "INSERT INTO comment (
 					comment_key, user, post, date_created,
-					body, name, address, url, email
+					body, address
 				) VALUES (
-					?, ?, ?, NOW(),
-					?, ?, ?, ?, ?
+					?, ?, ?, NOW(), ?, ?
 				)";
 		$q = $site->db->prepare($sql);
 		$q->bindValue(1, generate_key(), PDO::PARAM_STR);
 		$q->bindValue(2, $obj->user, PDO::PARAM_INT);
 		$q->bindValue(3, $obj->post, PDO::PARAM_INT);
 		$q->bindValue(4, $obj->body, PDO::PARAM_STR);
-		$q->bindValue(5, $obj->name, PDO::PARAM_STR);
-		$q->bindValue(6, $obj->address, PDO::PARAM_STR);
-		$q->bindValue(7, $obj->url, PDO::PARAM_STR);
-		$q->bindValue(8, $obj->email, PDO::PARAM_STR);
+		$q->bindValue(5, $obj->address, PDO::PARAM_STR);
 		$q->execute();
 		
 		$r = return_obj_success();
@@ -123,7 +119,7 @@ function comment_modal($post) {
 	}
 ?>
 <div id="newcomment" class="modal fade">
-	<form role="form" action="workorders.php" method="post">
+	<form role="form" action="<?=$site->settings->uri_postcomment?>" method="post">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -150,6 +146,7 @@ function comment_modal($post) {
 			</div>
 		</div>
 		<input type="hidden" name="post" value="<?=$post?>"/>
+		<input type="hidden" name="return" value="<?=get_return_url()?>"/>
 	</form>
 </div>
 <?php

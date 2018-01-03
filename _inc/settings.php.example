@@ -7,28 +7,32 @@ date_default_timezone_set('UTC');
 $settings = new stdClass();
 
 // site settings
-$settings->site_name	= "My awesome website";
-$settings->site_path	= "/var/www/html";
-$settings->site_url		= "https://example.net";
+$settings->site_name		= "My awesome website";
+$settings->site_path		= "/var/www/html";
+$settings->site_url			= "https://example.net";
+
+// pagination
+$settings->posts_per_page	= 10;
 
 // how long you stay logged in (seconds)
-$settings->login_ttl	= 3600 * 24 * 5;
+$settings->login_ttl		= 3600 * 24 * 5;
 
 // database settings
-$settings->db_host 		= "localhost";
-$settings->db_user 		= "root";
-$settings->db_pass 		= "";
-$settings->db_schema 	= "blog";
-$settings->db_timezone	= "+00:00";	// store everything in GMT
+$settings->db_host 			= "localhost";
+$settings->db_user 			= "root";
+$settings->db_pass 			= "";
+$settings->db_schema 		= "blog";
+$settings->db_timezone		= "+00:00";	// store everything in GMT
 
 // timezones
 $settings->default_timezone = "America/New_York";
 
 // URIs
-$settings->uri_login	= "/signin";
-$settings->uri_logout	= "/signout";
-$settings->uri_profile	= "/my-account";
-$settings->uri_settings	= "/my-settings";
+$settings->uri_login		= "/signin";
+$settings->uri_logout		= "/signout";
+$settings->uri_profile		= "/my-account";
+$settings->uri_settings		= "/my-settings";
+$settings->uri_postcomment	= "/post-comment";
 
 // manager URIs
 $settings->uri_manager			= "/manage";

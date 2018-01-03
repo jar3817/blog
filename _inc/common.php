@@ -47,6 +47,9 @@ function navigation(){
 				</ul>
 				-->
 				<ul class="nav navbar-nav navbar-right">
+<?php if (user_is_manager()) { ?>
+					<li><button onclick="window.location.href='<?=$site->settings->uri_man_new_post?>';" class="btn btn-default navbar-btn">New Post</button></li>
+<?php } ?>
 <?php 
 	if (user_is_logged_in()) { 
 		//$c = message_unread_count($site->user->id);
@@ -56,8 +59,9 @@ function navigation(){
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img class="img-circle profile-thumbnail" src="<?=$site->user->picture_url?>"> <?=given_name($site->user->name)?> <?=$unread?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">My Posts</a></li>
-							<li><a href="#">My Comments</a></li>
+<?php if (user_is_manager()) { ?>
+							<li><a href="<?=$site->settings->uri_manager?>">Manager</a></li>
+<?php } ?>
 							<li><a href="<?=$site->settings->uri_settings?>">Settings</a></li>
 							<li role="separator" class="divider"></li>
 							<li><a href="<?=$site->settings->uri_logout?>">Signout</a></li>
@@ -79,8 +83,8 @@ function redirect($url){
 }
 
 function redirect_return() {
-	global $post;
-	$url = base64_decode($post->return);
+	global $site;
+	$url = base64_decode($site->post->return);
 	header("Location: $url");
 	die();
 }
@@ -191,33 +195,12 @@ function time_ago($date) {
 	}
 }
 
-function time_ago2($date, $full = false) {
-	$now = new DateTime;
-    $ago = new DateTime($date);
-    $diff = $now->diff($ago);
+function get_return_url(){
+	return base64_encode($_SERVER["REQUEST_URI"]);
+}
 
-    $diff->w = floor($diff->d / 7);
-    $diff->d -= $diff->w * 7;
-
-    $string = array(
-        'y' => 'year',
-        'm' => 'month',
-        'w' => 'week',
-        'd' => 'day',
-        'h' => 'hour',
-        'i' => 'minute',
-        's' => 'second',
-    );
-    foreach ($string as $k => &$v) {
-        if ($diff->$k) {
-            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-        } else {
-            unset($string[$k]);
-        }
-    }
-
-    if (!$full) $string = array_slice($string, 0, 1);
-    return $string ? implode(', ', $string) . ' ago' : 'just now';
+function now() {
+	return date("Y-m-d H:i:s");
 }
 
 ?>

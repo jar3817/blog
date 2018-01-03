@@ -346,4 +346,10 @@ function user_auth_callback2() {
 	
 	user_login($user);
 }
+
+function user_is_manager() {
+	global $site;
+	
+	return user_is_logged_in() && is_numeric($site->user->manager);
+}
 ?>

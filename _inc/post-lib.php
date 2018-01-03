@@ -99,12 +99,15 @@ function post_get_by_name($name) {
 	}
 }
 
-function post_list($offset=0, $length=10) {
+function post_list($published=1, $offset=0, $length=10) {
 	global $site;
+	
+	$pub = ($published) ? " AND published = 1" : "";
 	
 	try {
 		$sql = "SELECT *
 				FROM post
+				WHERE 1 $pub
 				ORDER BY date_created DESC
 				LIMIT ? 
 				OFFSET ?";
@@ -135,7 +138,7 @@ function post_slug($o) {
 ?>
 	<div class="post">
 		<h1><a href="/<?=$o->title_url?>"><?=$o->title?></a></h1>
-		<h2><?=format_date($o->date_created)?> // <?=$comment_count?> // Joe</h2>
+		<h2><?=format_date($o->date_created)?> // <?=$comment_count?></h2>
 		<p>
 			<?=$o->content?>
 		</p>
@@ -145,17 +148,22 @@ function post_slug($o) {
 
 function post_index() {
 	global $site;
-	$posts = post_list();
+	$offset = (isset($site->get->page)) ? $site->get->page * $site->settings->posts_per_page : 0;
+	$posts = post_list(1, $offset, $site->settings->posts_per_page);
+	$posts = (isset($posts->result)) ? $posts->result : null;
 	
 	include_once("_inc/head.php");
 	navigation();
 	
 	echo "<div class=\"container\">\n";
 	
-	foreach ($posts->result as $p) {
-		post_slug($p);
+	foreach ((array)$posts as $p) {
+		post_slug(unslash($p));
 	}
 	
+	if (!$posts) {
+		echo "<div>no posts to display...</div>";
+	}
 	echo "</div>\n";
 	include("_inc/foot.php");
 }
@@ -165,6 +173,7 @@ function post_single($name) {
 	global $site;
 	
 	$p = post_get_by_name($name);
+	$p = unslash($p);
 	
 	include_once("_inc/head.php");
 	navigation();
@@ -184,7 +193,10 @@ function post_single($name) {
 			<button class="btn btn-default" data-toggle="modal" data-target="#newcomment">Add a comment</button>
 			<?=comment_modal($p->id)?>
 <?php } ?>
-<?php foreach ((array)$comments as $c) { ?>
+<?php 
+		foreach ((array)$comments as $c) { 
+			$c = unslash($c);
+?>
 			<hr>
 			<div class="comment">
 				<div class="comment-header"><?=($c->user) ? given_name($c->author) : $c->name?> // <span title="<?=format_date($c->date_created, 1)?>"><?=time_ago($c->date_created)?></span></div>
@@ -208,5 +220,45 @@ function post_view() {
 	}
 	
 	die();
+}
+
+function post_add_comment() {
+	global $site;
+	
+	if (!user_is_logged_in()) {
+		redirect($settings->uri_login);
+		die();
+	}
+	
+	$p = post_get($site->post->post);
+	$o = new stdClass();
+	
+	$o->user 	= $site->user->id;
+	$o->post 	= $p->id;
+	$o->body 	= $site->post->body;
+	$o->address	= $_SERVER['REMOTE_ADDR'];
+	
+	$o = slash($o);
+	comment_add($o);
+	redirect_return();
+}
+
+function post_publish($id) {
+	global $site;
+	
+	$p = post_get($id);
+	$p->published = 1;
+	$p->date_published = now();
+	
+	post_edit($p);
+}
+
+function post_unpublish($id) {
+	global $site;
+	
+	$p = post_get($id);
+	$p->published = 0;
+
+	post_edit($p);
 }
 ?>

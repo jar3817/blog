@@ -1,11 +1,21 @@
 RewriteEngine On
 RewriteBase /
 
-RewriteRule ^signin$	index.php?op=auth [QSA]
-RewriteRule ^signout$	index.php?op=auth_out [QSA]
-RewriteRule ^process-signin$	index.php?op=auth_in [QSA]
-RewriteRule ^process-signin2$	index.php?op=auth_in2 [QSA]
+# auth stuff
+RewriteRule ^signin$			index.php?op=auth 		[QSA]
+RewriteRule ^signout$			index.php?op=auth_out 	[QSA]
+RewriteRule ^process-signin$	index.php?op=auth_in 	[QSA]
+RewriteRule ^process-signin2$	index.php?op=auth_in2 	[QSA]
 
+# post pagination
+RewriteRule ^page-([0-9]+)$		index.php?op=view&page=$1	[QSA]
+
+# post comments
+RewriteRule ^post-comment$		index.php?op=post-comment	[QSA]
+
+# admin stuff
+RewriteRule ^manage$			admin.php				[QSA]
+RewriteRule ^manage/new-post	admin.php?op=new-post	[QSA]
 
 # catch everything else (webpages) that don't exist in the filesystem
 RewriteCond %{REQUEST_FILENAME} !-f
