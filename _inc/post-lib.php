@@ -133,11 +133,11 @@ function post_slug($o) {
 		return;
 	}
 	
-	$comment_count = ($o->comments == 1) ? "{$o->comments} comment" : "{$o->comments} comments";
+	$c = ($o->comments == 0) ? "" : sprintf("// %d comment%s", $o->comments, ($o->comments == 1) ? "" : "s");
 ?>
 	<div class="post">
 		<h1><a href="/<?=$o->title_url?>"><?=$o->title?></a></h1>
-		<h2><?=format_date($o->date_created)?> // <?=$comment_count?></h2>
+		<h2><?=format_date($o->date_created)?> <?=$c?></h2>
 		<p>
 			<?=$o->content?>
 		</p>
@@ -198,7 +198,7 @@ function post_single($name) {
 ?>
 			<hr>
 			<div class="comment">
-				<div class="comment-header"><?=($c->user) ? given_name($c->author) : $c->name?> // <span title="<?=format_date($c->date_created, 1)?>"><?=time_ago($c->date_created)?></span></div>
+				<div class="comment-header"><?=($c->user) ? given_name($c->author) : $c->name?> // <span class="code-font" title="<?=format_date($c->date_created, 1)?>"><?=time_ago($c->date_created)?></span></div>
 				<div class="comment-body"><?=$c->body?></div>
 			</div>
 <?php } ?>
