@@ -17,6 +17,9 @@ RewriteRule ^post-comment$		index.php?op=post-comment	[QSA]
 RewriteRule ^manage$			admin.php				[QSA]
 RewriteRule ^manage/new-post	admin.php?op=new-post	[QSA]
 
+# random pages
+RewriteRule ^terms$				index.php?op=tos		[QSA]
+
 # catch everything else (webpages) that don't exist in the filesystem
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

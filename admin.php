@@ -28,6 +28,18 @@ function admin_index() {
 	
 	include_once("_inc/head.php");
 	navigation();
+	$p = post_list(0, 50, 0);
+	$p = (isset($p->result)) ? $p->result : null;
+?>
+	<div class="container">
+<?php 
+	foreach ((array)$p as $post) {
+		$post = unslash($post);
+?>
+		<div><?=$post->title?></div>
+<?php } ?>
+	</div>
+<?php
 	include_once("_inc/foot.php");
 }
 

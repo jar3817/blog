@@ -203,4 +203,17 @@ function now() {
 	return date("Y-m-d H:i:s");
 }
 
+function page_terms() {
+	global $site;
+	
+	include_once("_inc/head.php");
+	navigation();
+?>
+	<div class="container">
+		<h1>Terms of Service</h1>
+		<p></p>
+	</div>
+<?php
+	include_once("_inc/foot.php");
+}
 ?>

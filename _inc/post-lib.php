@@ -103,7 +103,6 @@ function post_list($published=1, $offset=0, $length=10) {
 	global $site;
 	
 	$pub = ($published) ? " AND published = 1" : "";
-	
 	try {
 		$sql = "SELECT *
 				FROM post
