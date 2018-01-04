@@ -16,6 +16,7 @@ RewriteRule ^post-comment$		index.php?op=post-comment	[QSA]
 # admin stuff
 RewriteRule ^manage$			admin.php				[QSA]
 RewriteRule ^manage/new-post	admin.php?op=new-post	[QSA]
+RewriteRule ^manage/edit-post/(.+)	admin.php?op=edit-post&post=$1	[QSA]
 
 # random pages
 RewriteRule ^terms$				index.php?op=tos		[QSA]

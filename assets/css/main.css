@@ -75,3 +75,8 @@ hr {
 .comment-header {
 	font-weight: bold;
 }
+
+.row-title {
+	font-weight: bold;
+	font-size: 1.2em;
+}

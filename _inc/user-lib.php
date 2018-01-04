@@ -42,8 +42,7 @@ function user_auth_form() {
 				{
 					provier: firebase.auth.EmailAuthProvider.PROVIDER_ID,
 					requireDisplayName: true
-				},
-				firebase.auth.PhoneAuthProvider.PROVIDER_ID
+				}
 			],
 
 			tosUrl: '/terms'
@@ -244,7 +243,6 @@ function user_auth_callback() {
 ?>
 <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
 <script>
-	// Initialize Firebase
 	var config = {
 		apiKey: "AIzaSyABYaquSByTS66-xX4EIOOP_3JiElzG_O0",
 		authDomain: "joe-reid-blog.firebaseapp.com",
@@ -261,6 +259,7 @@ function user_auth_callback() {
 				"/process-signin2", 
 				{"email": user.email, "name": user.displayName, "uid" : user.uid, "provider" : user.providerId, "token" : token},
 				function(result) {
+					//alert(result);
 					window.location.href = "/";
 				}
 			);
@@ -281,6 +280,8 @@ function user_auth_callback2() {
 	require("ExpiredException.php");
 	require("SignatureInvalidException.php");
 
+	//die(var_dump($site->post));
+	
 	$certurl = "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com";
 	$c = file_get_contents($certurl);
 	$certs = json_decode($c, true);

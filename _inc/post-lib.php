@@ -178,8 +178,8 @@ function post_single($name) {
 	navigation();
 	$comments = comment_list($p->id);
 	$comments = (isset($comments->result)) ? $comments->result : null;
-	echo "<div class=\"container\">\n";
 ?>
+<div class="container">
 	<div class="post">
 		<h1><?=$p->title?></h1>
 		<h2><?=format_date($p->date_created)?></h2>
@@ -198,14 +198,15 @@ function post_single($name) {
 ?>
 			<hr>
 			<div class="comment">
+				<a name="name="<?=$c->comment_key?>"></a>
 				<div class="comment-header"><?=($c->user) ? given_name($c->author) : $c->name?> // <span class="code-font" title="<?=format_date($c->date_created, 1)?>"><?=time_ago($c->date_created)?></span></div>
 				<div class="comment-body"><?=$c->body?></div>
 			</div>
 <?php } ?>
 		</div>
 	</div>
+</div>
 <?
-	echo "</div>\n";
 	include("_inc/foot.php");
 }
 

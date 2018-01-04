@@ -5,6 +5,9 @@ function format_date($date, $timetoo = 0, $format = "F j, Y") {
 	global $site;
 	$changetime = new DateTime($date, new DateTimeZone('UTC'));
 	$changetime->setTimezone(new DateTimeZone($site->settings->default_timezone));
+	
+	// if default format and same year, don't display the year part
+	$format = ($changetime->format("Y") == date("Y") && $format == "F j, Y") ? "F j" : $format;
 	$time24 = "H:i";
 	$time12 = "g:i a";
 	$time = (1) ? $time12 : $time24;
