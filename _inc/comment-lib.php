@@ -134,7 +134,15 @@ function comment_modal($post) {
 					<script type="text/javascript">
 						$(document).ready(function($) {
 							$('#body').summernote({ 
-								height: 200
+								height: 200,
+								toolbar: [
+									// [groupName, [list of button]]
+									['style', ['bold', 'italic', 'underline', 'clear']],
+									['fontsize', ['fontsize']],
+									['color', ['color']],
+									['para', ['ul', 'ol', 'paragraph']],
+									['insert', ['picture','video']]
+								]
 							});
 						});
 					</script>
