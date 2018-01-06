@@ -33,6 +33,10 @@ $settings->uri_logout		= "/signout";
 $settings->uri_profile		= "/my-account";
 $settings->uri_settings		= "/my-settings";
 $settings->uri_postcomment	= "/post-comment";
+$settings->uri_postimg		= "/img-upload";
+$settings->uri_uploaddir	= "/upload";
+
+$settings->uri_img_oops		= "/assets/img/oops.png";
 
 // manager URIs
 $settings->uri_manager			= "/manage";

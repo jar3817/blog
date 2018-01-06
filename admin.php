@@ -16,6 +16,10 @@ switch ((isset($post->op)) ? $post->op : "") {
 	case "edit-post":
 	admin_save_post();
 	break;
+	
+	case "img-upload":
+	admin_img_upload();
+	break;
 }
 
 switch ((isset($get->op)) ? $get->op : "") {
@@ -93,8 +97,27 @@ function admin_new_post() {
 		<script type="text/javascript">
 			$(document).ready(function($) {
 				$('#body').summernote({ 
-					height: 350
+					height: 350,
+					onImageUpload: function(files, editor, welEditable) {
+						sendFile(files[0], editor, welEditable);
+					}
 				});
+				
+				function sendFile(file, editor, welEditable) {
+					data = new FormData();
+					data.append("file", file);
+					$.ajax({
+						data: data,
+						type: "POST",
+						url: "/manage/img-upload",
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function(url) {
+							editor.insertImage(welEditable, url);
+						}
+					});
+				}
 			});
 		</script>
 <?php
@@ -155,8 +178,31 @@ function admin_edit_post() {
 		<script type="text/javascript">
 			$(document).ready(function($) {
 				$('#body').summernote({ 
-					height: 350
+					height: 350,
+					callbacks: {
+						onImageUpload: function(files) {
+							sendFile(files[0]);
+						}
+					}
 				});
+				
+				function sendFile(file) {
+					data = new FormData();
+					data.append("file", file);
+					$.ajax({
+						data: data,
+						type: "POST",
+						url: "<?=$site->settings->uri_postimg?>",
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function(url) {
+							var node = document.createElement("img");
+							node.setAttribute("src", url);
+							$("#body").summernote('insertNode', node);
+						}
+					});
+				}
 				
 				$("#cancel").click(function() {
 					window.location.href="<?=$site->settings->uri_manager?>";
@@ -195,4 +241,6 @@ function admin_save_post() {
 	
 	redirect($site->settings->uri_manager);
 }
+
+
 ?>

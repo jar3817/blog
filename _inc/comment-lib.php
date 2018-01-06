@@ -141,7 +141,7 @@ function comment_modal($post) {
 									['fontsize', ['fontsize']],
 									['color', ['color']],
 									['para', ['ul', 'ol', 'paragraph']],
-									['insert', ['picture','video']]
+									['insert', ['picture','video','link']]
 								]
 							});
 						});

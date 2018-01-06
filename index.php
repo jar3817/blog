@@ -33,6 +33,14 @@ switch ((isset($get->op)) ? $get->op : "") {
 	page_terms();
 	break;
 	
+	case "about":
+	page_about();
+	break;
+	
+	case "img-upload":
+	post_img_upload();
+	break;
+	
 	default:
 	post_view();
 }

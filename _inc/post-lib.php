@@ -230,6 +230,8 @@ function post_add_comment() {
 		die();
 	}
 	
+	die(var_dump($site->post));
+	
 	$p = post_get($site->post->post);
 	$o = new stdClass();
 	
@@ -260,5 +262,25 @@ function post_unpublish($id) {
 	$p->published = 0;
 
 	post_edit($p);
+}
+
+function post_img_upload() {
+	global $site;
+	
+	if ($_FILES['file']['name']) {
+		if (!$_FILES['file']['error']) {
+			$name = generate_key();
+			$ext = explode('.', $_FILES['file']['name']);
+			$filename = sprintf("%s.%s", $name, $ext[sizeof($ext)-1]);
+			$destination = sprintf("%s/%s/%s", $site->settings->site_path, $site->settings->uri_uploaddir, $filename);
+			$location = $_FILES["file"]["tmp_name"];
+			move_uploaded_file($location, $destination);
+			echo sprintf("%s/%s", $site->settings->uri_uploaddir, $filename);
+		} else {
+		  echo $settings->uri_img_oops;
+		}
+	}
+	
+	die();
 }
 ?>

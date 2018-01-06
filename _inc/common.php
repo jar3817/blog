@@ -219,4 +219,18 @@ function page_terms() {
 <?php
 	include_once("_inc/foot.php");
 }
+
+function page_about() {
+	global $site;
+	
+	include_once("_inc/head.php");
+	navigation();
+?>
+	<div class="container">
+		<h1>About Me</h1>
+		<p></p>
+	</div>
+<?php
+	include_once("_inc/foot.php");
+}
 ?>
