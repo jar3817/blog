@@ -206,6 +206,11 @@ function now() {
 	return date("Y-m-d H:i:s");
 }
 
+function get_filename($path) {
+	$arr = explode("/", $path);
+	return $arr[sizeof($arr) - 1];
+}
+
 function page_terms() {
 	global $site;
 	

@@ -148,7 +148,7 @@ function admin_create_post() {
 	$m = new stdClass();
 	foreach ($site->post->media as $media) {
 		$m->post = $r->id;
-		$m->filename = $media;
+		$m->filename = get_filename($media);
 		post_media_add($m);
 	}
 	
@@ -264,7 +264,7 @@ function admin_save_post() {
 	$m = new stdClass();
 	foreach ($site->post->media as $media) {
 		$m->post = $o->id;
-		$m->filename = $media;
+		$m->filename = get_filename($media);
 		post_media_add($m);
 	}
 	
