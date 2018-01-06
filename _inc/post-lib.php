@@ -198,7 +198,7 @@ function post_single($name) {
 ?>
 			<hr>
 			<div class="comment">
-				<a name="name="<?=$c->comment_key?>"></a>
+				<a name="<?=$c->comment_key?>"></a>
 				<div class="comment-header"><?=($c->user) ? given_name($c->author) : $c->name?> // <span class="code-font" title="<?=format_date($c->date_created, 1)?>"><?=time_ago($c->date_created)?></span></div>
 				<div class="comment-body"><?=$c->body?></div>
 			</div>
@@ -230,8 +230,6 @@ function post_add_comment() {
 		die();
 	}
 	
-	die(var_dump($site->post));
-	
 	$p = post_get($site->post->post);
 	$o = new stdClass();
 	
@@ -241,7 +239,16 @@ function post_add_comment() {
 	$o->address	= $_SERVER['REMOTE_ADDR'];
 	
 	$o = slash($o);
-	comment_add($o);
+	$r = comment_add($o);
+	
+	// insert each media item
+	$m = new stdClass();
+	foreach ($site->post->media as $media) {
+		$m->comment = $r->id;
+		$m->filename = get_filename($media);
+		comment_media_add($m);
+	}
+	
 	redirect_return();
 }
 

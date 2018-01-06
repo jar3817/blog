@@ -41,6 +41,10 @@ switch ((isset($get->op)) ? $get->op : "") {
 	post_img_upload();
 	break;
 	
+	case "com-img-upload":
+	comment_img_upload();
+	break;
+	
 	default:
 	post_view();
 }
