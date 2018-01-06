@@ -283,4 +283,76 @@ function post_img_upload() {
 	
 	die();
 }
+
+function post_media_get($id) {
+	global $site;
+	
+	try {
+		$sql = "SELECT * FROM post_media WHERE id = ? LIMIT 1";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $id, PDO::PARAM_INT);
+		$q->execute();
+		
+		while ($r = $q->fetch(PDO::FETCH_OBJ)) {
+			return $r;
+		}
+	} catch (PDOException $e) {
+		return return_obj_fail($e->getMessage());
+	}
+}
+
+function post_media_get_list($id) {
+	global $site;
+	
+	try {
+		$sql = "SELECT * FROM post_media WHERE post = ? LIMIT 1";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $id, PDO::PARAM_INT);
+		$q->execute();
+		
+		while ($r = $q->fetchAll(PDO::FETCH_OBJ)) {
+			return $r;
+		}
+	} catch (PDOException $e) {
+		return return_obj_fail($e->getMessage());
+	}
+}
+
+function post_media_add($obj) {
+	global $site;
+	
+	try {
+		$sql = "INSERT INTO post_media (
+					post, filename, date_added
+				) VALUES (
+					?, ?, NOW()
+				)";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $obj->post, PDO::PARAM_INT);
+		$q->bindValue(2, $obj->filename, PDO::PARAM_STR);
+		$q->execute();
+		
+		$r = return_obj_success();
+		$r->id = $site->db->lastInsertId();
+		return $r;
+	} catch (PDOException $e) {
+		return return_obj_fail($e->getMessage());
+	}
+}
+
+function post_media_delete($id) {
+	global $site;
+	
+	try {
+		$sql = "DELETE FROM post_media WHERE id = ? LIMIT 1";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $id, PDO::PARAM_INT);
+		$q->execute();
+		
+		$r = return_obj_success();
+		return $r;
+	} catch (PDOException $e) {
+		return return_obj_fail($e->getMessage());
+	}
+}
 ?>

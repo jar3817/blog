@@ -6,6 +6,7 @@ if (!user_is_manager()) {
 	navigation();
 	echo "<div>Only managers can access this page.</div>";
 	include_once("_inc/foot.php");
+	die();
 }
 
 switch ((isset($post->op)) ? $post->op : "") {
@@ -15,10 +16,6 @@ switch ((isset($post->op)) ? $post->op : "") {
 	
 	case "edit-post":
 	admin_save_post();
-	break;
-	
-	case "img-upload":
-	admin_img_upload();
 	break;
 }
 
@@ -76,7 +73,7 @@ function admin_new_post() {
 ?>
 		<div class="container">
 			<h2>Create Post</h2>
-			<form role="form" action="<?=$site->settings->uri_man_new_post?>" method="post">
+			<form role="form" action="<?=$site->settings->uri_man_new_post?>" method="post" id="addform">
 				<div class="form-group">
 					<input type="text" id="title" name="title" class="form-control" placeholder="Post Title" required autofocus>
 				</div>
@@ -98,23 +95,33 @@ function admin_new_post() {
 			$(document).ready(function($) {
 				$('#body').summernote({ 
 					height: 350,
-					onImageUpload: function(files, editor, welEditable) {
-						sendFile(files[0], editor, welEditable);
+					callbacks: {
+						onImageUpload: function(files) {
+							sendFile(files[0]);
+						}
 					}
 				});
 				
-				function sendFile(file, editor, welEditable) {
+				function sendFile(file) {
 					data = new FormData();
 					data.append("file", file);
 					$.ajax({
 						data: data,
 						type: "POST",
-						url: "/manage/img-upload",
+						url: "<?=$site->settings->uri_postimg?>",
 						cache: false,
 						contentType: false,
 						processData: false,
 						success: function(url) {
-							editor.insertImage(welEditable, url);
+							var node = document.createElement("img");
+							node.setAttribute("src", url);
+							$("#body").summernote('insertNode', node);
+							
+							$('<input>').attr({
+								type: 'hidden',
+								name: 'media[]',
+								value: url
+							}).appendTo($("#addform"));
 						}
 					});
 				}
@@ -137,7 +144,15 @@ function admin_create_post() {
 	
 	$r = post_add($o);
 	
-	redirect($settings->uri_manager);
+	// insert each media item
+	$m = new stdClass();
+	foreach ($site->post->media as $media) {
+		$m->post = $r->id;
+		$m->filename = $media;
+		post_media_add($m);
+	}
+	
+	redirect($site->settings->uri_manager);
 }
 
 function admin_edit_post() {
@@ -152,7 +167,7 @@ function admin_edit_post() {
 ?>
 		<div class="container">
 			<h2>Edit Post</h2>
-			<form role="form" action="<?=$site->settings->uri_man_edit_post?>/<?=$p->title_url?>" method="post">
+			<form role="form" action="<?=$site->settings->uri_man_edit_post?>/<?=$p->title_url?>" method="post" id="editform">
 				<div class="form-group">
 					<input type="text" id="title" name="title" class="form-control" placeholder="Post Title" required autofocus value="<?=$p->title?>">
 				</div>
@@ -200,6 +215,12 @@ function admin_edit_post() {
 							var node = document.createElement("img");
 							node.setAttribute("src", url);
 							$("#body").summernote('insertNode', node);
+							
+							$('<input>').attr({
+								type: 'hidden',
+								name: 'media[]',
+								value: url
+							}).appendTo($("#editform"));
 						}
 					});
 				}
@@ -238,6 +259,14 @@ function admin_save_post() {
 	$o = slash($o);
 	
 	post_edit($o);
+	
+	// insert each media item
+	$m = new stdClass();
+	foreach ($site->post->media as $media) {
+		$m->post = $o->id;
+		$m->filename = $media;
+		post_media_add($m);
+	}
 	
 	redirect($site->settings->uri_manager);
 }
