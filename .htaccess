@@ -22,6 +22,7 @@ RewriteRule ^manage/edit-post/(.+)	admin.php?op=edit-post&post=$1	[QSA]
 RewriteRule ^terms$				index.php?op=tos		[QSA]
 RewriteRule ^img-upload$		index.php?op=img-upload	[QSA]
 RewriteRule ^com-img-upload$	index.php?op=com-img-upload	[QSA]
+RewriteRule ^post-delete		admin.php?op=post-delete [QSA]
 RewriteRule ^about-me$			index.php?op=about		[QSA]
 
 # catch everything else (webpages) that don't exist in the filesystem

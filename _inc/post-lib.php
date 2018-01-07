@@ -177,7 +177,7 @@ function post_single($name) {
 	include_once("_inc/head.php");
 	navigation();
 	$comments = comment_list($p->id);
-	$comments = (isset($comments->result)) ? $comments->result : null;
+	//$comments = (isset($comments->result)) ? $comments->result : null;
 ?>
 <div class="container">
 	<div class="post">
@@ -276,7 +276,7 @@ function post_img_upload() {
 	
 	if ($_FILES['file']['name']) {
 		if (!$_FILES['file']['error']) {
-			$name = generate_key();
+			$name = generate_key(8);
 			$ext = explode('.', $_FILES['file']['name']);
 			$filename = sprintf("%s.%s", $name, $ext[sizeof($ext)-1]);
 			$destination = sprintf("%s/%s/%s", $site->settings->site_path, $site->settings->uri_uploaddir, $filename);
@@ -351,6 +351,10 @@ function post_media_delete($id) {
 	global $site;
 	
 	try {
+		$m = post_media_get($id);
+		$filepath = sprintf("%s%s/%s", $site->settings->site_path, $site->settings->uri_uploaddir, $m->filename);
+		unlink($filepath);
+		
 		$sql = "DELETE FROM post_media WHERE id = ? LIMIT 1";
 		$q = $site->db->prepare($sql);
 		$q->bindValue(1, $id, PDO::PARAM_INT);
@@ -362,4 +366,31 @@ function post_media_delete($id) {
 		return return_obj_fail($e->getMessage());
 	}
 }
+
+function post_delete($id) {
+	global $site;
+	
+	try {
+		$sql = "DELETE FROM post WHERE id = ? LIMIT 1";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $id, PDO::PARAM_INT);
+		$q->execute();
+		
+		$m = post_media_get_list($id);
+		foreach ((array) $m as $media) {
+			post_media_delete($media->id);
+		}
+		
+		$c = comment_list($id, 0, 0, 1000);
+		foreach ((array) $c as $comment) {
+			comment_delete($comment->id);
+		}
+		
+		$r = return_obj_success();
+		return $r;
+	} catch (PDOException $e) {
+		return return_obj_fail($e->getMessage());
+	}
+}
+
 ?>

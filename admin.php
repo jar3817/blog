@@ -17,6 +17,10 @@ switch ((isset($post->op)) ? $post->op : "") {
 	case "edit-post":
 	admin_save_post();
 	break;
+	
+	case "post-delete":
+	admin_delete_post();
+	break;
 }
 
 switch ((isset($get->op)) ? $get->op : "") {
@@ -46,7 +50,8 @@ function admin_index() {
 		<div class="row row-title">
 			<!-- <div class="col-md-1"></div> -->
 			<div class="col-xs-6 col-sm-6 col-md-3">Title</div>
-			<div class="col-xs-6 col-sm-6 col-md-2">Published</div>
+			<div class="hidden-xs hidden-sm col-md-2">Comments</div>
+			<div class="col-xs-3 col-sm-3 col-md-2">Published</div>
 			<div class="hidden-xs hidden-sm col-md-2">Created</div>
 		</div>
 <?php 
@@ -57,7 +62,8 @@ function admin_index() {
 		<div class="row">
 			<!-- <div class="col-md-1"></div> -->
 			<div class="col-xs-6 col-sm-6 col-md-3"><input type="checkbox" name="<?=$post->id?>"> <a href="<?=$site->settings->uri_man_edit_post?>/<?=$post->title_url?>"><?=$post->title?></a></div>
-			<div class="col-xs-6 col-sm-6 col-md-2"><?=$post->published?></div>
+			<div class="hidden-xs hidden-sm col-md-2"><?=$post->comments?></div>
+			<div class="col-xs-3 col-sm-3 col-md-2"><?=$post->published?></div>
 			<div class="hidden-xs hidden-sm col-md-2"><?=format_date($post->date_created)?></div>
 		</div>
 <?php } ?>
@@ -182,7 +188,7 @@ function admin_edit_post() {
 				</div>
 				<div class="form-group pull-right">
 					<button type="submit" class="btn btn-primary" id="create" name="create">Save</button>
-					<!-- <button class="btn btn-default" id="cancel">Cancel</button> -->
+					<button type="button" class="btn btn-danger" id="delete" name="delete" data-toggle="modal" data-target="#confirmdelete">Delete</button>
 				</div>
 				
 				<input type="hidden" name="op" value="edit-post">
@@ -230,6 +236,31 @@ function admin_edit_post() {
 				});
 			});
 		</script>
+		
+		<div id="confirmdelete" class="modal fade">
+			<form role="form" action="<?=$site->settings->uri_postdelete?>" method="post" id="commentform">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title">Delete this post?</h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group">
+								<p>You are about to delete this post and any associated comments and media.</p>
+								<p>This can't be undone, are you sure you want to proceed?</p>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary" name="">Yes, delete it!</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="op" value="post-delete"/>
+				<input type="hidden" name="post" value="<?=$p->id?>"/>
+			</form>
+		</div>
 <?php
 	include_once("_inc/foot.php");
 }
@@ -271,5 +302,11 @@ function admin_save_post() {
 	redirect($site->settings->uri_manager);
 }
 
+function admin_delete_post() {
+	global $site;
+	
+	post_delete($site->post->post);
+	redirect($site->settings->uri_manager);
+}
 
 ?>

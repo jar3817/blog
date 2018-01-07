@@ -4,6 +4,8 @@ function comment_add($obj) {
 	global $site;
 	
 	try {
+		db_begin();
+		
 		$sql = "INSERT INTO comment (
 					comment_key, user, post, date_created,
 					body, address
@@ -20,8 +22,16 @@ function comment_add($obj) {
 		
 		$r = return_obj_success();
 		$r->id = $site->db->lastInsertId();
+		
+		$sql = "UPDATE post SET comments = comments + 1 WHERE id = ? LIMIT 1";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $obj->post, PDO::PARAM_INT);
+		$q->execute();
+		
+		db_commit();
 		return $r;
 	} catch (PDOException $e) {
+		db_rollback();
 		return return_obj_fail($e->getMessage());
 	}
 }
@@ -102,8 +112,7 @@ function comment_list($post, $published=1, $offset=0, $length=50) {
 		
 		$success = return_obj_success();
 		while ($r = $q->fetchAll(PDO::FETCH_OBJ)) {	
-			$success->result = $r;
-			return $success;
+			return $r;
 		}
 		
 	} catch (PDOException $e) {
@@ -210,7 +219,7 @@ function comment_media_get_list($id) {
 	global $site;
 	
 	try {
-		$sql = "SELECT * FROM comment_media WHERE post = ? LIMIT 1";
+		$sql = "SELECT * FROM comment_media WHERE comment = ? LIMIT 1";
 		$q = $site->db->prepare($sql);
 		$q->bindValue(1, $id, PDO::PARAM_INT);
 		$q->execute();
@@ -249,6 +258,10 @@ function comment_media_delete($id) {
 	global $site;
 	
 	try {
+		$m = comment_media_get($id);
+		$filepath = sprintf("%s%s/%s", $site->settings->site_path, $site->settings->uri_uploaddir, $m->filename);
+		unlink($filepath);
+		
 		$sql = "DELETE FROM comment_media WHERE id = ? LIMIT 1";
 		$q = $site->db->prepare($sql);
 		$q->bindValue(1, $id, PDO::PARAM_INT);
@@ -266,7 +279,7 @@ function comment_img_upload() {
 	
 	if ($_FILES['file']['name']) {
 		if (!$_FILES['file']['error']) {
-			$name = generate_key();
+			$name = generate_key(8);
 			$ext = explode('.', $_FILES['file']['name']);
 			$filename = sprintf("%s.%s", $name, $ext[sizeof($ext)-1]);
 			$destination = sprintf("%s/%s/%s", $site->settings->site_path, $site->settings->uri_uploaddir, $filename);
@@ -279,5 +292,26 @@ function comment_img_upload() {
 	}
 	
 	die();
+}
+
+function comment_delete($id) {
+	global $site;
+	
+	try {
+		$sql = "DELETE FROM comment WHERE id = ? LIMIT 1";
+		$q = $site->db->prepare($sql);
+		$q->bindValue(1, $id, PDO::PARAM_INT);
+		$q->execute();
+		
+		$m = comment_media_get_list($id);
+		foreach ((array) $m as $media) {
+			comment_media_delete($media->id);
+		}
+		
+		$r = return_obj_success();
+		return $r;
+	} catch (PDOException $e) {
+		return return_obj_fail($e->getMessage());
+	}
 }
 ?>
