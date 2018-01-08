@@ -184,7 +184,9 @@ function admin_edit_post() {
 					<textarea id="body" name="body" class="form-control" placeholder="" required><?=$p->content?></textarea>
 				</div>
 				<div class="form-group">
-					<input type="checkbox" name="published"<?=$published?>> Published
+					<input type="checkbox" name="published"<?=$published?>> Published as of
+					<input type="text" name="date_published" id="date_published" value="<?=$p->date_published?>">
+					<span><a href="#">now</a></span>
 				</div>
 				<div class="form-group pull-right">
 					<button type="submit" class="btn btn-primary" id="create" name="create">Save</button>
