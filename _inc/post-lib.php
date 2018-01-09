@@ -117,8 +117,7 @@ function post_list($published=1, $offset=0, $length=10) {
 		
 		$success = return_obj_success();
 		while ($r = $q->fetchAll(PDO::FETCH_OBJ)) {	
-			$success->result = $r;
-			return $success;
+			return $r;
 		}
 		
 	} catch (PDOException $e) {
@@ -149,12 +148,14 @@ function post_index() {
 	global $site;
 	$offset = (isset($site->get->page)) ? $site->get->page * $site->settings->posts_per_page : 0;
 	$posts = post_list(1, $offset, $site->settings->posts_per_page);
-	$posts = (isset($posts->result)) ? $posts->result : null;
+	//$posts = (isset($posts->result)) ? $posts->result : null;
+	
+	$site->extra_js[] = "/assets/js/infinite.js";
 	
 	include_once("_inc/head.php");
 	navigation();
 	
-	echo "<div class=\"container\">\n";
+	echo "<div id=\"posts\" class=\"container\">\n";
 	
 	foreach ((array)$posts as $p) {
 		post_slug(unslash($p));
@@ -164,9 +165,20 @@ function post_index() {
 		echo "<div>no posts to display...</div>";
 	}
 	echo "</div>\n";
+	echo "<div id=\"loading\"></div>";
 	include("_inc/foot.php");
 }
 
+function post_scroll() {
+	global $site;
+	
+	$offset = (isset($site->get->page)) ? $site->get->page * $site->settings->posts_per_page : 0;
+	$posts = post_list(1, $offset, $site->settings->posts_per_page);
+	
+	foreach ((array)$posts as $p) {
+		post_slug(unslash($p));
+	}
+}
 
 function post_single($name) {
 	global $site;

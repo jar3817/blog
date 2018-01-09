@@ -43,8 +43,7 @@ function admin_index() {
 	navigation();
 	$offset = (isset($site->get->page)) ? $site->get->page * $site->settings->posts_per_page : 0;
 	$p = post_list(0, $offset, 50);
-	
-	$p = (isset($p->result)) ? $p->result : null;
+
 ?>
 	<div class="container">
 		<div class="row row-title">

@@ -24,6 +24,7 @@ RewriteRule ^img-upload$		index.php?op=img-upload	[QSA]
 RewriteRule ^com-img-upload$	index.php?op=com-img-upload	[QSA]
 RewriteRule ^post-delete		admin.php?op=post-delete [QSA]
 RewriteRule ^about-me$			index.php?op=about		[QSA]
+RewriteRule ^post-scroll$		index.php?op=post-scroll	[QSA]
 
 # catch everything else (webpages) that don't exist in the filesystem
 RewriteCond %{REQUEST_FILENAME} !-f
