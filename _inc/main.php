@@ -29,4 +29,8 @@ $site->get = $get;
 $site->post = $post;
 $site->settings = $settings;
 $site->user = $user;
+
+// include js/css assets in random pages by adding to these
+$site->extra_js = array();
+$site->extra_css = array();
 ?>

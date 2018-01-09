@@ -3,6 +3,9 @@
 function user_auth_form() {
 	global $site;
 	
+	$site->extra_js[] = "/assets/js/firebaseui-2.5.1.js";
+	$site->extra_css[] = "/assets/css/firebaseui-2.5.1.css";
+	
 	include("_inc/head.php");
 	navigation();
 
