@@ -107,7 +107,7 @@ function post_list($published=1, $offset=0, $length=10) {
 		$sql = "SELECT *
 				FROM post
 				WHERE 1 $pub
-				ORDER BY date_created DESC
+				ORDER BY date_published DESC
 				LIMIT ? 
 				OFFSET ?";
 		$q = $site->db->prepare($sql);
@@ -136,7 +136,7 @@ function post_slug($o) {
 ?>
 	<div class="post">
 		<h1><a href="/<?=$o->title_url?>"><?=$o->title?></a></h1>
-		<h2><?=format_date($o->date_created)?> <?=$c?></h2>
+		<h2><?=format_date($o->date_published)?> <?=$c?></h2>
 		<p>
 			<?=$o->content?>
 		</p>
@@ -189,12 +189,11 @@ function post_single($name) {
 	include_once("_inc/head.php");
 	navigation();
 	$comments = comment_list($p->id);
-	//$comments = (isset($comments->result)) ? $comments->result : null;
 ?>
 <div class="container">
 	<div class="post">
 		<h1><?=$p->title?></h1>
-		<h2><?=format_date($p->date_created)?></h2>
+		<h2><?=format_date($p->date_published)?></h2>
 		<p>	
 			<?=$p->content?>
 		</p>
