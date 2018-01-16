@@ -5,9 +5,9 @@ function post_add($obj) {
 	
 	try {
 		$sql = "INSERT INTO post (
-					author, title, title_url, content, date_created
+					author, title, title_url, content, date_created, date_published
 				) VALUES (
-					?, ?, ?, ?, NOW()
+					?, ?, ?, ?, NOW(), NOW()
 				)";
 		$q = $site->db->prepare($sql);
 		$q->bindValue(1, $obj->author, PDO::PARAM_INT);

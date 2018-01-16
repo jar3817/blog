@@ -185,7 +185,7 @@ function admin_edit_post() {
 				<div class="form-group">
 					<input type="checkbox" name="published"<?=$published?>> Published as of
 					<input type="text" name="date_published" id="date_published" value="<?=$p->date_published?>">
-					<span><a href="#">now</a></span>
+					<span><button class="btn btn-warning btn-xs" id="now" type="button">now</button></span>
 				</div>
 				<div class="form-group pull-right">
 					<button type="submit" class="btn btn-primary" id="create" name="create">Save</button>
@@ -235,6 +235,10 @@ function admin_edit_post() {
 				$("#cancel").click(function() {
 					window.location.href="<?=$site->settings->uri_manager?>";
 				});
+				
+				$("#now").click(function() {
+					$("#date_published").val(new Date().toISOString().slice(0, 19).replace('T', ' ')); 
+				});
 			});
 		</script>
 		
@@ -274,14 +278,15 @@ function admin_save_post() {
 	// wasn't, is now
 	if ($site->post->published == "on" && !$o->published) {
 		$o->published = 1;
-		$o->date_published = now();
+		//$o->date_published = now();
 	}
 	
 	// was, isn't now
 	if (!isset($site->post->published) && $o->published) {
 		$o->published = 0;
-		$o->date_published = "0000-00-00 00:00:00";
+		//$o->date_published = "0000-00-00 00:00:00";
 	}
+	$o->date_published = $site->post->date_published;
 	$o->edited = 1;
 	$o->date_edited = now();
 	$o->editor = $site->user->id;

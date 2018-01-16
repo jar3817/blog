@@ -34,7 +34,7 @@ function user_auth_form() {
 					provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
 					authMethod: 'https://accounts.google.com',
 					clientId: '895430332496-av93kv5330lbfes7e39kbin7ld5t7bqs.apps.googleusercontent.com'
-				},
+				}/*,
 				{
 					provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
 					scopes: ['public_profile','email'],
@@ -45,7 +45,7 @@ function user_auth_form() {
 				{
 					provier: firebase.auth.EmailAuthProvider.PROVIDER_ID,
 					requireDisplayName: true
-				}
+				}*/
 			],
 
 			tosUrl: '/terms'
